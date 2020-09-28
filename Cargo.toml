@@ -1,0 +1,24 @@
+[package]
+name = "rustsar"
+version = "0.1.0"
+authors = ["István Bozsó <bozso.istvan@csfk.mta.hu>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "rustsar"
+path = "src/rustsar/lib.rs"
+
+[[bin]]
+name = "rsar"
+path = "src/bin/main.rs"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+once_cell = "1.4.0"
+ndarray =  { version = "0.13.1", features = ["blas"] }
+ndarray-linalg = { version = "0.12.1", features = ["openblas"] }
+num-traits = "0.2.12"
+#openblas-src = { version = "0.6.0", default-features = false, features = ["cblas", "system"] }
