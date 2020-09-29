@@ -21,4 +21,4 @@ once_cell = "1.4.0"
 ndarray =  { version = "0.13.1", features = ["blas"] }
 ndarray-linalg = { version = "0.12.1", features = ["openblas"] }
 num-traits = "0.2.12"
-#openblas-src = { version = "0.6.0", default-features = false, features = ["cblas", "system"] }
+openblas-src = "0.9.0"

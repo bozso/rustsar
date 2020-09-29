@@ -257,6 +257,7 @@ dependencies = [
  "ndarray-linalg",
  "num-traits",
  "once_cell",
+ "openblas-src",
  "serde",
  "serde_json",
 ]
