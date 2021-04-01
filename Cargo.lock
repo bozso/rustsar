@@ -33,7 +33,7 @@ version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a25f136d1bcc6fc28330077511a0646aaf75bc894e5532b1a33a93d814272328"
 dependencies = [
- "openblas-src",
+ "netlib-src",
 ]
 
 [[package]]
@@ -58,12 +58,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "cc"
+version = "1.0.60"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef611cc68ff783f18535d77ddd080185275713d852c4f5cbb6122c462a7a825c"
+
+[[package]]
 name = "cloudabi"
 version = "0.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ddfc5b9aa5d4507acaf872de71051dfd0e309860e88966e1051e462a077aac4f"
 dependencies = [
  "bitflags",
+]
+
+[[package]]
+name = "cmake"
+version = "0.1.44"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0e56268c17a6248366d66d4a47a3381369d068cce8409bb1716ed77ea32163bb"
+dependencies = [
+ "cc",
 ]
 
 [[package]]
@@ -84,7 +99,7 @@ version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "92b348b4b770b1092add976188242941b92272f3bad95cfbacadbfcb0c8923eb"
 dependencies = [
- "openblas-src",
+ "netlib-src",
 ]
 
 [[package]]
@@ -155,6 +170,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "netlib-src"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "39f41f36bb4d46906d5a72da5b73a804d9de1a7282eb7c89617201acda7b8212"
+dependencies = [
+ "cmake",
+]
+
+[[package]]
 name = "num-complex"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -190,12 +214,6 @@ name = "once_cell"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b631f7e854af39a1739f401cf34a8a013dfe09eac4fa4dba91e9768bd28168d"
-
-[[package]]
-name = "openblas-src"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "84629d1d4f9f40d3f9e4756dae33c6af50d3c2fcc186558dac65bf55141ade6b"
 
 [[package]]
 name = "proc-macro2"
@@ -257,7 +275,6 @@ dependencies = [
  "ndarray-linalg",
  "num-traits",
  "once_cell",
- "openblas-src",
  "serde",
  "serde_json",
 ]

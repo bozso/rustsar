@@ -1,33 +1,38 @@
 use num_traits::identities::{Zero, One};
 
 use ndarray::{
-    Array1, Array2, Array, ArrayView1, Dimension, Axis, RemoveAxis, Data
+    Array, Dimension, Axis, RemoveAxis,
+    Data, Ix1, ArrayBase, Ix2, RawDataClone, DataOwned, DataMut
 };
 
 use ndarray_linalg::{
-    Solve, 
+    Solve, FactorizeInto, Scalar, Lapack,
     error::Result,
 };
 
 
-pub trait Polynom<T> {
+pub trait Fittable<T> : 
+    DataMut<Elem = T> + RawDataClone<Elem = T> + DataOwned<Elem = T>
+    {}
+
+pub trait Polynom<T: Data<Elem = T>> {
     type Output;
     
-    fn eval(&self, coord: Array1<T>) -> Self::Output;
+    fn eval(&self, coord: &ArrayBase<T, Ix1>) -> Self::Output;
     /// TODO: implement
-    fn eval_coords(&self, coord: Array2<T>) -> Self::Output;
+    fn eval_coords(&self, coord: &ArrayBase<T, Ix2>) -> Self::Output;
 }
 
-pub struct Fit<T> {
-    coefficients: ndarray::Array2<T>,
+pub struct Fit<T, A: Data<Elem = T>> {
+    coefficients: ndarray::ArrayBase<A, Ix2>,
 }
 
-impl<T: Copy + Clone + Zero + One + Data<Elem = T>> Fit<T> {
-    fn make_vander<'a>(x: ArrayView1<'a, T>, degree: usize) -> Array2<T> {
+impl<T: One + Clone + Zero + Scalar + Lapack, A: Fittable<T>> Fit<T, A> {
+    fn make_vander(x: &ArrayBase<A, Ix1>, degree: usize) -> Array<T, Ix2> {
         let nrows = x.shape()[0] as usize;
         
-        let mut arr = Array2::<T>::zeros((nrows, degree + 1));
-
+        let mut arr = Array::<T, _>::zeros((nrows, degree + 1));
+        
         for ii in 0..nrows {
             arr[[ii, 1]] = T::one();
             arr[[ii, 2]] = x[ii];
@@ -39,19 +44,21 @@ impl<T: Copy + Clone + Zero + One + Data<Elem = T>> Fit<T> {
         arr
     }
     
-    pub fn fit<D: Dimension + RemoveAxis>(x: &Array1<T>, y: &Array<T, D>, degree: usize) -> Result<Self> {
-        let fact = Self::make_vander(x.view(), degree).factorize_into()?;
+    pub fn fit(x: &ArrayBase<A, Ix1>, y: ArrayBase<A, Ix1>, degree: usize) -> Result<Self> {
+        let fact = Self::make_vander(x, degree).factorize_into()?;
         
+        /*
         let coeff = match y.ndim() {
             1 => fact.solve_into(y)?,
             2 => y.axis_iter(Axis(1))
-                  .map(|v| fact.solve_into(v)?)
-                  .collect::<Array<_,_>>()
+                  .map(|v| fact.solve(v)?)
+                  .collect::<ArrayBase<_,_>>()
                   .into_shape((1, 1))?
         };
+        */
         
         Ok(Self {
-            coefficients: coeff,
+            coefficients: fact.solve_into(y)?,
         })
     }
 /*
